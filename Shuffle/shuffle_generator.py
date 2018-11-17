@@ -22,15 +22,17 @@ class ShuffleGenerator:
      - Getting value
      var = gen.get_next()
 
+    Attributes:
+        ShuffleGenerator._Array - array of random numbers
+
     """
 
     def __init__(self):
         self._Array = np.random.rand(np.random.random_integers(1000, 5000))
         # Initializing array of random length with random float digits from [0, 1]
-        self.q_len = len(self._Array)
 
     def get_next(self):
-        pop_number = np.random.random_integers(self.q_len)
+        pop_number = np.random.random_integers(self._Array.__len__())
         # Generating random number and getting value responding this number to array
         res = self._Array[pop_number]
 
