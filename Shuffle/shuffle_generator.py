@@ -86,7 +86,7 @@ class CombinedShuffleGenerator:
 
 
 if __name__ == '__main__':
-    shuffle = ShuffleGenerator()
+    shuffle = CombinedShuffleGenerator(wg1, wg2)
     print(shuffle.__doc__)
 
     for i in range(100):
