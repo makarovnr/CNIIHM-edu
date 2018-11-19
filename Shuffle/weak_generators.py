@@ -1,7 +1,18 @@
-def weak_generator_first(s_i=0):
-    return ( (s_i+1) * 8**3) % 10**3
+#!/usr/bin/env/python3
+
+first_global_counter = None
+second_global_counter = None
 
 
-def weak_generator_second(s_i=1):
-    s_i = (5**7 * s_i + 1) % (2**10)
-    return s_i
+def weak_generator_first():
+    global first_global_counter    
+    res = ((first_global_counter+1) * 8**3) % 10**3
+    first_global_counter = first_global_counter * 13**3 % 10**2
+    return res
+
+
+def weak_generator_second():
+    global second_global_counter
+    res = (5**7 * second_global_counter + 1) % (2**10)
+    second_global_counter = second_global_counter * 15**3 % 10**2
+    return res
