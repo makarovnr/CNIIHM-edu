@@ -71,6 +71,7 @@ class TemperatureProblem:
                 )
                 if wall:
                     curr_x, curr_y = self.xPOI, self.yPOI
+                    self.CurrentPointArray = np.append(self.CurrentPointArray, np.ndarray([-1, wall]))
                     res_set.add(self.CurrentPointArray)
                     self.CurrentPointArray = None
             except KeyboardInterrupt:
