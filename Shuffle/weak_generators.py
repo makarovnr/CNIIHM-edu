@@ -1,5 +1,6 @@
-#!/usr/bin/env/python3
-
+"""
+Implements two similar weak random number generators.
+"""
 first_global_counter = None
 second_global_counter = None
 
