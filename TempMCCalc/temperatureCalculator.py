@@ -33,8 +33,8 @@ class TemperatureProblem:
         self.CurrentPointArray = None           # array of floats [x, y]
 
     @property
-    def poi_is_outside(self):
-        return True if 0 < self.xPOI > self.xDim or 0 < self.yPOI > self.yDim else False
+    def poi_is_inside(self):           # TODO NEEDS LOGIC ADJUSTMENT!
+        return True if 0 < self.xPOI < self.xDim or 0 < self.yPOI < self.yDim else False
 
     def point_is_next_to_wall(self, x, y):
         if x <= wall_epsilon:
@@ -59,7 +59,7 @@ class TemperatureProblem:
         res_set = set()
         # read values of POI and assign to the processing variables
         self.xPOI, self.yPOI = curr_x, curr_y = x, y
-        if self.poi_is_outside:                                         # stop execution if POI is not inside rectangle
+        if not self.poi_is_inside:                                         # stop execution if POI is not inside rectangle
             raise Exception("POI must be inside initial rectangle!")
 
         while len(res_set) < dice_rolls_per_dot:
