@@ -4,8 +4,8 @@ import numpy as np
 
 # Laplacian(T) = 0   ---  Laplace equation
 
-wall_epsilon = 0.1
-dice_rolls_per_dot = 100
+WALL_EPSILON = 0.1
+DICE_ROLLS_PER_DOT = 1000
 
 
 class TemperatureProblem:
@@ -30,20 +30,26 @@ class TemperatureProblem:
         self.xDim, self.yDim, self.borderTemps = xdim, ydim, temp   # floats x, y, [t1, t2, t3, t4]
         self.xPOI, self.yPOI = None, None       # floats x, y
         self.CalculatedPOIArray = None          # array of floats [x, y, T]
-        self.CurrentPointArray = None           # array of floats [x, y]
+        self.CurrentPointArray = []           # array of floats [T_i]
 
     @property
-    def poi_is_inside(self):           # TODO NEEDS LOGIC ADJUSTMENT!
+    def poi_is_inside(self):
         return True if 0 < self.xPOI < self.xDim or 0 < self.yPOI < self.yDim else False
 
     def point_is_next_to_wall(self, x, y):
-        if x <= wall_epsilon:
+        """
+        Returns
+        :param x:   x point coordinate
+        :param y:   y point coordinate
+        :return:    number of wall point is next to, False if point is not next to any wall
+        """
+        if x <= WALL_EPSILON:
             return 2
-        elif y <= wall_epsilon:
+        elif y <= WALL_EPSILON:
             return 0
-        elif self.xDim - x <= wall_epsilon:
+        elif self.xDim - x <= WALL_EPSILON:
             return 1
-        elif self.yDim - y <= wall_epsilon:
+        elif self.yDim - y <= WALL_EPSILON:
             return 3
         else:
             return False
@@ -56,27 +62,27 @@ class TemperatureProblem:
         return np.array([x_pr, y_pr]) + np.array([cir_rad * np.cos(angle), cir_rad * np.sin(angle)])
 
     def get_poi_temp(self, x, y):
-        res_set = set()
         # read values of POI and assign to the processing variables
         self.xPOI, self.yPOI = curr_x, curr_y = x, y
-        if not self.poi_is_inside:                                         # stop execution if POI is not inside rectangle
+        if not self.poi_is_inside:
+            # stop execution if POI is not inside rectangle
             raise Exception("POI must be inside initial rectangle!")
 
-        while len(res_set) < dice_rolls_per_dot:
+        while len(self.CurrentPointArray) < DICE_ROLLS_PER_DOT:
+            # rolling random search until generated enough results
             try:
                 curr_x, curr_y = self.get_circle_and_rnd_point(curr_x, curr_y)
                 wall = self.point_is_next_to_wall(curr_x, curr_y)
-                self.CurrentPointArray = wall if (self.CurrentPointArray is None) else np.append(
-                    self.CurrentPointArray, np.array([curr_x, curr_y])
-                )
+                # self.CurrentPointArray = wall if (self.CurrentPointArray is None) else np.append(
+                #     self.CurrentPointArray, np.array([curr_x, curr_y])
+                # )
                 if wall:
                     curr_x, curr_y = self.xPOI, self.yPOI
-                    self.CurrentPointArray = np.append(self.CurrentPointArray, np.ndarray([-1, wall]))
-                    res_set.add(self.CurrentPointArray)
-                    self.CurrentPointArray = None
+                    self.CurrentPointArray.append(wall)
             except KeyboardInterrupt:
+                # Interrupt execution if needed without stopping the kernel
                 print("Calculation manually interrupted through KeyboardInterrupt")
-                self.CurrentPointArray = None
+                self.CurrentPointArray = []
                 self.xPOI, self.yPOI = None, None
                 return None
-        return res_set
+        return None
