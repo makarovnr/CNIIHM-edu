@@ -56,7 +56,8 @@ class TemperatureProblem:
             return 1
         elif self.yDim - y <= WALL_EPSILON:
             return 3
-        return None
+        else:
+            return None
 
     def get_circle_and_rnd_point(self, x_pr, y_pr):
         # select circle radius and calculate random angle
