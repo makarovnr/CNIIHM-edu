@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 
 import numpy as np
+import matplotlib.pyplot as plt
 import time
+
+from matplotlib import cm
 
 # Laplacian(T) = 0   ---  Laplace equation
 
 WALL_EPSILON = 0.1
-DICE_ROLLS_PER_DOT = 10**6
+DICE_ROLLS_PER_DOT = 10**4
 
 
 class TemperatureProblem:
@@ -39,7 +42,7 @@ class TemperatureProblem:
 
     @property
     def poi_is_inside(self):
-        return True if 0 < self.xPOI < self.xDim or 0 < self.yPOI < self.yDim else False
+        return True if 0 <= self.xPOI <= self.xDim or 0 <= self.yPOI <= self.yDim else False
 
     def point_is_next_to_wall(self, x, y):
         """
@@ -100,11 +103,37 @@ class TemperatureProblem:
                 return None
 
         temp = np.mean(np.array(self.CurrentPointArray))
-        print("Calculated through %.4f seconds" % (time.time() - start_time))
-        self.CurrentPointArray = None
+        # print("Calculated through %.4f seconds" % (time.time() - start_time))
+        self.CurrentPointArray = []
         return temp
+
+    def plot3d(self):
+        # generating X axis
+        X = np.arange(0, self.xDim, 0.1, dtype=float)
+        # generating Y axis
+        Y = np.arange(0, self.yDim, 0.1, dtype=float)
+        TEMP = np.zeros([len(X), len(Y)])
+
+        # calculating data for X, Y
+        points_count = 0
+        print("Points to calculate: ", len(X) * len(Y))
+        for i in range(len(X)):
+            for j in range(len(Y)):
+                TEMP[i, j] = self.get_poi_temp(X[i], Y[j])
+                points_count += 1
+
+        # plotting
+        fig = plt.figure()
+        ax = fig.gca(projection='3d')
+
+        # adjusting plot
+        surf = ax.plot_surface(X, Y, TEMP, cmap=cm.coolwarm, antialiased=False)
+        fig.colorbar(surf, shrink=0.5, aspect=5)
+        plt.show()
 
 
 if __name__ == '__main__':
     t = TemperatureProblem(15, 10, [10, 15, 15, 20])
     print("Calculated temperature for point:", t.get_poi_temp(5, 5))
+    print("Plotting...")
+    t.plot3d()
