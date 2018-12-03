@@ -33,6 +33,10 @@ class TemperatureProblem:
           0
     Calculate temperature for the point of interest:
     t = temp_calc.get_poi_temp(x_poi, y_poi)
+
+    Plot 3d figure of temperature on given task:
+    t.plot3d()
+
     """
     def __init__(self, xdim, ydim, temp):
         self.xDim, self.yDim, self.borderTemps = xdim, ydim, temp   # floats x, y, [t1, t2, t3, t4]
