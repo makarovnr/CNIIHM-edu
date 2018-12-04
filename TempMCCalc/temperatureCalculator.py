@@ -5,11 +5,12 @@ import matplotlib.pyplot as plt
 import time
 
 from matplotlib import cm
+from mpl_toolkits.mplot3d import Axes3D
 
 # Laplacian(T) = 0   ---  Laplace equation
 
-WALL_EPSILON = 0.1
-DICE_ROLLS_PER_DOT = 10**4
+WALL_EPSILON = 0.05
+DICE_ROLLS_PER_DOT = 10**3
 
 
 class TemperatureProblem:
@@ -111,33 +112,34 @@ class TemperatureProblem:
         self.CurrentPointArray = []
         return temp
 
-    def plot3d(self):
+    def plot3d(self, plot_step=0.2):
         # generating X axis
-        X = np.arange(0, self.xDim, 0.1, dtype=float)
+        X = np.arange(0, self.xDim, plot_step, dtype=float)
         # generating Y axis
-        Y = np.arange(0, self.yDim, 0.1, dtype=float)
-        TEMP = np.zeros([len(X), len(Y)])
+        Y = np.arange(0, self.yDim, plot_step, dtype=float)
+        TEMP = np.zeros([len(Y), len(X)])
 
         # calculating data for X, Y
         points_count = 0
         print("Points to calculate: ", len(X) * len(Y))
         for i in range(len(X)):
             for j in range(len(Y)):
-                TEMP[i, j] = self.get_poi_temp(X[i], Y[j])
+                TEMP[j, i] = self.get_poi_temp(X[i], Y[j])
                 points_count += 1
+                print(points_count)
 
         # plotting
+        X, Y = np.meshgrid(X, Y)
         fig = plt.figure()
-        ax = fig.gca(projection='3d')
+        ax = Axes3D(fig)
 
         # adjusting plot
-        surf = ax.plot_surface(X, Y, TEMP, cmap=cm.coolwarm, antialiased=False)
-        fig.colorbar(surf, shrink=0.5, aspect=5)
+        ax.plot_surface(X, Y, TEMP, cmap=cm.coolwarm, antialiased=False)
         plt.show()
 
 
 if __name__ == '__main__':
-    t = TemperatureProblem(15, 10, [10, 15, 15, 20])
+    t = TemperatureProblem(15, 10, [10, 5, 5, 20])
     print("Calculated temperature for point:", t.get_poi_temp(5, 5))
     print("Plotting...")
-    t.plot3d()
+    t.plot3d(plot_step=0.1)
