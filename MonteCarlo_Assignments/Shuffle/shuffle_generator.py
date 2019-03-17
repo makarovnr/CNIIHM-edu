@@ -2,8 +2,8 @@
 
 import numpy as np
 
-from Shuffle.weak_generators import weak_generator_first as wg1
-from Shuffle.weak_generators import weak_generator_second as wg2
+from MonteCarlo_Assignments.Shuffle.weak_generators import weak_generator_first as wg1
+from MonteCarlo_Assignments.Shuffle.weak_generators import weak_generator_second as wg2
 
 
 class ShuffleGenerator:
