@@ -1,30 +1,38 @@
 import numpy as np
-import threading
 import time
 
-
-PASSES = 100
-
-
-def computing_foo(num):
-    np.random.seed(num)
-    val_list = np.random.pareto(100)
-    return True, np.sum(val_list)
+from threading import Thread
 
 
-def single(passes=50):
-    for i in range(passes):
-        computing_foo(i)
+total_sleep = 0
 
 
-def parallel(passes=50):
-    for i in range(passes):
-        thread = threading.Thread(target=computing_foo, args=np.random.randint(1, 10**10))
-        thread.start()
-        thread.join()
+class MyThread(Thread):
+    """
+    A threading example
+    """
+
+    def __init__(self, name):
+        """Инициализация потока"""
+        Thread.__init__(self)
+        self.name = name
+
+    def run(self):
+        global total_sleep
+        amount = np.random.randint(3, 15)
+        total_sleep += amount
+        time.sleep(amount)
+        msg = "%s is running" % self.name
+        print(msg)
 
 
-if __name__ == '__main__':
-    parallel(passes=PASSES)
-    single(passes=PASSES)
+def create_threads():
+    for i in range(5):
+        name = "Thread #%s" % (i + 1)
+        my_thread = MyThread(name)
+        my_thread.start()
 
+
+if __name__ == "__main__":
+    create_threads()
+    print(total_sleep)
