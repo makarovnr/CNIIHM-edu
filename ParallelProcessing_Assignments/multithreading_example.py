@@ -12,7 +12,6 @@ class MyThread(Thread):
         self.amount = am
 
     def run(self):
-        global total_sleep
         amount = self.amount
         time.sleep(amount)
         msg = "%s is running" % self.name
