@@ -2,10 +2,8 @@ import time
 from threading import Thread
 
 
-total_sleep = 0
-
-
 class MyThread(Thread):
+
     thread_list = []
 
     def __init__(self, name, am):
@@ -16,7 +14,6 @@ class MyThread(Thread):
     def run(self):
         global total_sleep
         amount = self.amount
-        total_sleep += amount
         time.sleep(amount)
         msg = "%s is running" % self.name
         print(msg)
