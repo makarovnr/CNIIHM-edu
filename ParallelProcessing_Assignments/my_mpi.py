@@ -3,7 +3,7 @@ import numpy as np
 from mpi4py import MPI
 
 
-def load_func(x, pow=5.):
+def load_func_norm(x, type=5.):
     arr = 0
     for y in x:
         arr += y ** pow
